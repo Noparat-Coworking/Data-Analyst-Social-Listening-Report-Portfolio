@@ -1,27 +1,405 @@
-<h2>Social Listening Report</h2>
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Portfolio Reports</title>
+    <style>
+      :root {
+        --bg: #0b1020;
+        --panel: rgba(255, 255, 255, 0.06);
+        --panel-2: rgba(255, 255, 255, 0.09);
+        --text: rgba(255, 255, 255, 0.92);
+        --muted: rgba(255, 255, 255, 0.65);
+        --border: rgba(255, 255, 255, 0.12);
+        --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+        --radius: 16px;
+      }
 
-<ul>
-<li>
-<a href="AIS Fibre Monthly Report (Dec) 2025 1.1.pdf">
-AIS Fibre Monthly Report (Dec) 2025
-</a>
-</li>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+        background: radial-gradient(1200px 800px at 20% 0%, rgba(99,102,241,0.25), transparent 60%),
+                    radial-gradient(1000px 700px at 80% 20%, rgba(34,197,94,0.18), transparent 55%),
+                    var(--bg);
+        color: var(--text);
+      }
 
-<li>
-<a href="CAAT MONTHLY REPORT (Dec) 2025.pdf">
-CAAT Monthly Report (Dec 2025)
-</a>
-</li>
+      .wrap {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 28px 18px 40px;
+      }
 
-<li>
-<a href="Digital dashboard_krungsri consumer_SOCIAL ENABLE(Dec-23).pdf">
-Krungsri Consumer Social Dashboard
-</a>
-</li>
+      header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+      .title {
+        display: grid;
+        gap: 6px;
+      }
+      h1 {
+        margin: 0;
+        font-size: 22px;
+        letter-spacing: 0.2px;
+      }
+      .subtitle {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+      }
 
-<li>
-<a href="Supalai Monthly Report (1 - 28 Mar) 2025.pdf">
-Supalai Monthly Report (Mar 2025)
-</a>
-</li>
-</ul>
+      .top-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .pill {
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.04);
+        padding: 9px 12px;
+        border-radius: 999px;
+        color: var(--text);
+        text-decoration: none;
+        font-size: 13px;
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        transition: transform .12s ease, background .12s ease;
+      }
+      .pill:hover { transform: translateY(-1px); background: rgba(255,255,255,0.07); }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 380px 1fr;
+        gap: 14px;
+        align-items: stretch;
+      }
+
+      @media (max-width: 980px) {
+        .grid { grid-template-columns: 1fr; }
+      }
+
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .card-head {
+        padding: 14px 14px 12px;
+        border-bottom: 1px solid var(--border);
+        display: grid;
+        gap: 10px;
+      }
+
+      .search {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .search input {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: rgba(0,0,0,0.18);
+        color: var(--text);
+        outline: none;
+      }
+      .search input::placeholder { color: rgba(255,255,255,0.5); }
+
+      .list {
+        max-height: 70vh;
+        overflow: auto;
+      }
+      @media (max-width: 980px) {
+        .list { max-height: unset; }
+      }
+
+      .item {
+        padding: 12px 14px;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        display: grid;
+        gap: 6px;
+        cursor: pointer;
+        transition: background .12s ease;
+      }
+      .item:hover { background: rgba(255,255,255,0.05); }
+      .item.active { background: rgba(99,102,241,0.16); }
+
+      .name {
+        font-weight: 600;
+        font-size: 14px;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .meta {
+        color: var(--muted);
+        font-size: 12px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .tag {
+        border: 1px solid rgba(255,255,255,0.14);
+        background: rgba(255,255,255,0.04);
+        padding: 2px 8px;
+        border-radius: 999px;
+      }
+
+      .viewer {
+        display: grid;
+        grid-template-rows: auto 1fr;
+        min-height: 70vh;
+      }
+
+      .viewer-head {
+        padding: 14px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .viewer-title {
+        display: grid;
+        gap: 2px;
+      }
+      .viewer-title strong { font-size: 14px; }
+      .viewer-title span { font-size: 12px; color: var(--muted); }
+
+      .viewer-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.04);
+        padding: 9px 12px;
+        border-radius: 12px;
+        color: var(--text);
+        text-decoration: none;
+        font-size: 13px;
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .btn:hover { background: rgba(255,255,255,0.07); }
+
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        background: rgba(0,0,0,0.22);
+      }
+
+      .hint {
+        padding: 16px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .footer {
+        margin-top: 14px;
+        color: rgba(255,255,255,0.55);
+        font-size: 12px;
+        text-align: center;
+      }
+
+      .icon {
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="title">
+          <h1>ผลงาน / Reports</h1>
+          <p class="subtitle">
+            คลิกที่รายการด้านซ้ายเพื่อพรีวิวไฟล์ PDF • เหมาะสำหรับ GitHub Pages
+          </p>
+        </div>
+
+        <div class="top-actions">
+          <a class="pill" href="README.md" target="_blank" rel="noopener noreferrer">📄 README</a>
+          <a class="pill" href="#" id="copyLinkBtn">🔗 คัดลอกลิงก์หน้านี้</a>
+        </div>
+      </header>
+
+      <div class="grid">
+        <!-- LEFT: list -->
+        <section class="card">
+          <div class="card-head">
+            <div class="search">
+              <input id="q" type="search" placeholder="ค้นหาชื่อไฟล์ เช่น caat, krungsri, supalai..." />
+            </div>
+            <div class="meta">
+              <span class="tag" id="countTag">0 files</span>
+              <span class="tag">คลิกเพื่อพรีวิว</span>
+            </div>
+          </div>
+
+          <div class="list" id="list"></div>
+        </section>
+
+        <!-- RIGHT: viewer -->
+        <section class="card viewer">
+          <div class="viewer-head">
+            <div class="viewer-title">
+              <strong id="viewerName">เลือกไฟล์ทางซ้าย</strong>
+              <span id="viewerSub">ระบบจะพรีวิว PDF ที่นี่</span>
+            </div>
+            <div class="viewer-actions">
+              <a class="btn" id="openBtn" href="#" target="_blank" rel="noopener noreferrer" style="display:none;">🧾 เปิดแท็บใหม่</a>
+              <a class="btn" id="dlBtn" href="#" download style="display:none;">⬇️ ดาวน์โหลด</a>
+            </div>
+          </div>
+
+          <div id="viewerBody">
+            <div class="hint">
+              - ถ้าเบราว์เซอร์ไม่รองรับการฝัง PDF ให้กด “เปิดแท็บใหม่”<br/>
+              - ไฟล์ต้องอยู่ใน repo เดียวกับ <code>index.html</code> และสะกดชื่อให้ตรง
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="footer">
+        © <span id="year"></span> • Hosted on GitHub Pages
+      </div>
+    </div>
+
+    <script>
+      // ✅ ปรับรายการไฟล์ตาม repo ในรูปที่คุณส่ง
+      const files = [
+        { file: "ais-fibre-report-dec-2025.pdf", label: "AIS Fibre Report (Dec 2025)", type: "PDF" },
+        { file: "caat-report-2025.pdf",          label: "CAAT Report (2025)",          type: "PDF" },
+        { file: "krungsri-report.pdf",          label: "Krungsri Report",             type: "PDF" },
+        { file: "supalai-report-mar-2025.pdf",  label: "Supalai Report (Mar 2025)",   type: "PDF" },
+      ];
+
+      const elList = document.getElementById("list");
+      const elQ = document.getElementById("q");
+      const elCount = document.getElementById("countTag");
+
+      const elViewerName = document.getElementById("viewerName");
+      const elViewerSub = document.getElementById("viewerSub");
+      const elViewerBody = document.getElementById("viewerBody");
+      const elOpenBtn = document.getElementById("openBtn");
+      const elDlBtn = document.getElementById("dlBtn");
+
+      const elYear = document.getElementById("year");
+      elYear.textContent = new Date().getFullYear();
+
+      function niceSizeGuess(filename) {
+        // GitHub Pages ไม่ให้อ่านขนาดไฟล์แบบ static ง่าย ๆ (ถ้าไม่ fetch HEAD)
+        // เลยทำเป็น placeholder ให้ดูเรียบร้อย
+        return "PDF";
+      }
+
+      function renderList() {
+        const q = (elQ.value || "").trim().toLowerCase();
+        const filtered = files.filter(x => (x.file + " " + x.label).toLowerCase().includes(q));
+
+        elCount.textContent = `${filtered.length} files`;
+
+        elList.innerHTML = "";
+        filtered.forEach((x, idx) => {
+          const div = document.createElement("div");
+          div.className = "item";
+          div.dataset.file = x.file;
+
+          div.innerHTML = `
+            <div class="name">📘 ${escapeHtml(x.label)}</div>
+            <div class="meta">
+              <span class="tag">${escapeHtml(x.file)}</span>
+              <span class="tag">${niceSizeGuess(x.file)}</span>
+            </div>
+          `;
+
+          div.addEventListener("click", () => openFile(x.file, x.label));
+          elList.appendChild(div);
+        });
+
+        // ถ้า filter แล้วเหลือ 1 อัน กดให้เลย
+        if (filtered.length === 1) {
+          openFile(filtered[0].file, filtered[0].label);
+          highlightActive(filtered[0].file);
+        }
+      }
+
+      function highlightActive(file) {
+        document.querySelectorAll(".item").forEach(it => {
+          it.classList.toggle("active", it.dataset.file === file);
+        });
+      }
+
+      function openFile(file, label) {
+        highlightActive(file);
+
+        elViewerName.textContent = label || file;
+        elViewerSub.textContent = file;
+
+        // ใส่ #toolbar=0 เพื่อลด UI บางส่วนใน viewer (แล้วแต่ browser)
+        const src = `${encodeURI(file)}#view=FitH`;
+
+        elViewerBody.innerHTML = `
+          <iframe src="${src}" title="${escapeAttr(label || file)}"></iframe>
+        `;
+
+        elOpenBtn.style.display = "";
+        elDlBtn.style.display = "";
+
+        elOpenBtn.href = file;
+        elDlBtn.href = file;
+        elDlBtn.setAttribute("download", file);
+      }
+
+      function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, m => ({
+          "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+        })[m]);
+      }
+      function escapeAttr(s) { return escapeHtml(s); }
+
+      elQ.addEventListener("input", renderList);
+
+      document.getElementById("copyLinkBtn").addEventListener("click", async (e) => {
+        e.preventDefault();
+        try {
+          await navigator.clipboard.writeText(location.href);
+          alert("คัดลอกลิงก์แล้ว");
+        } catch {
+          prompt("คัดลอกลิงก์ด้วยตัวเอง:", location.href);
+        }
+      });
+
+      // init
+      renderList();
+      // เปิดตัวแรกไว้ก่อนให้สวย
+      if (files.length) openFile(files[0].file, files[0].label);
+    </script>
+  </body>
+</html>
