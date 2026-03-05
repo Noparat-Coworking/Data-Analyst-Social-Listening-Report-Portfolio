@@ -10,6 +10,9 @@
       --bg:#0b1020; --card:rgba(255,255,255,.06); --text:rgba(255,255,255,.92);
       --muted:rgba(255,255,255,.65); --border:rgba(255,255,255,.14);
       --shadow:0 18px 60px rgba(0,0,0,.45); --radius:16px;
+      --sideWide: 320px;
+      --sideMini: 72px;
+      --topH: 120px; /* ประมาณ header height */
     }
     *{box-sizing:border-box}
 
@@ -23,19 +26,11 @@
         radial-gradient(900px 650px at 85% 18%, rgba(34,197,94,.18), transparent 55%),
         var(--bg);
       min-height:100vh;
-
-      -webkit-user-select:none;
-      -moz-user-select:none;
-      -ms-user-select:none;
-      user-select:none;
+      -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; user-select:none;
     }
-
-    /* อนุญาตให้ select ในช่องค้นหา */
     input, textarea{
-      -webkit-user-select:text !important;
-      -moz-user-select:text !important;
-      -ms-user-select:text !important;
-      user-select:text !important;
+      -webkit-user-select:text !important; -moz-user-select:text !important;
+      -ms-user-select:text !important; user-select:text !important;
     }
 
     .wrap{max-width:1500px;margin:0 auto;padding:18px 14px 20px}
@@ -62,12 +57,85 @@
       overflow:hidden;
     }
 
-    /* ✅ Viewer เต็มกว้าง */
+    /* ✅ Layout: Sidebar + Viewer */
+    .grid{
+      display:grid;
+      grid-template-columns: var(--sideWide) 1fr;
+      gap:12px;
+      align-items:stretch;
+      transition: grid-template-columns .18s ease;
+      min-height: calc(100vh - var(--topH));
+    }
+    .grid.collapsed{
+      grid-template-columns: var(--sideMini) 1fr; /* ✅ หด sidebar */
+    }
+
+    /* Sidebar */
+    .side{
+      display:grid;
+      grid-template-rows: auto auto 1fr;
+      min-height: calc(100vh - var(--topH));
+    }
+    .side-head{
+      padding:12px 12px 10px;
+      border-bottom:1px solid var(--border);
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+    }
+    .side-head strong{font-size:13px}
+    .toggle{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      border-radius:12px;
+      padding:8px 10px;
+      cursor:pointer;
+      display:inline-flex;align-items:center;gap:8px;
+    }
+    .toggle:hover{background:rgba(255,255,255,.07)}
+    .side-search{padding:12px;border-bottom:1px solid var(--border)}
+    .side-search input{
+      width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(0,0,0,.18);color:var(--text);outline:none;
+    }
+    .side-meta{padding:0 12px 10px;color:var(--muted);font-size:12px}
+    .tag{display:inline-block;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);padding:2px 8px;border-radius:999px}
+
+    .list{overflow:auto}
+    .item{padding:12px 12px;border-bottom:1px solid rgba(255,255,255,.06);display:grid;gap:6px;cursor:pointer}
+    .item:hover{background:rgba(255,255,255,.05)}
+    .item.active{background:rgba(99,102,241,.16)}
+    .name{font-weight:650;font-size:14px;display:flex;gap:8px;align-items:center}
+    .file{color:var(--muted);font-size:12px;display:flex;gap:10px;flex-wrap:wrap}
+
+    /* ✅ ตอน sidebar หด: ซ่อน text/ค้นหา ให้เหลือแค่ไอคอน */
+    .grid.collapsed .side-search,
+    .grid.collapsed .side-meta,
+    .grid.collapsed .file{
+      display:none;
+    }
+    .grid.collapsed .side-head{
+      justify-content:center;
+      padding:12px 8px;
+    }
+    .grid.collapsed .side-head strong{ display:none; }
+    .grid.collapsed .item{
+      padding:12px 8px;
+      justify-items:center;
+    }
+    .grid.collapsed .name{
+      font-size:0; /* ซ่อน label */
+      gap:0;
+    }
+    .grid.collapsed .name::before{
+      content:"📘";
+      font-size:18px;
+    }
+
+    /* Viewer */
     .viewer{
       display:grid;
       grid-template-rows:auto 1fr;
-      height: calc(100vh - 120px);
-      min-height: 520px;
+      min-height: calc(100vh - var(--topH));
     }
     .viewer-head{
       padding:12px 14px;
@@ -76,96 +144,41 @@
     }
     .viewer-title strong{font-size:14px}
     .viewer-title span{font-size:12px;color:var(--muted)}
-    iframe{
-      width:100%;
-      height:100%;
-      border:0;
-      background:rgba(0,0,0,.22);
-    }
+    iframe{width:100%;height:100%;border:0;background:rgba(0,0,0,.22)}
     .hint{padding:16px;color:var(--muted);font-size:13px;line-height:1.6}
     code{background:rgba(255,255,255,.08);padding:2px 6px;border-radius:8px;border:1px solid rgba(255,255,255,.12)}
     footer{margin-top:10px;text-align:center;color:rgba(255,255,255,.55);font-size:12px}
 
-    /* ✅ ปุ่ม hamburger ลอย */
-    .fab{
-      position:fixed;
-      left:18px;
-      bottom:18px;
-      z-index:50;
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding:12px 14px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:rgba(0,0,0,.35);
-      color:var(--text);
-      cursor:pointer;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      box-shadow: 0 16px 50px rgba(0,0,0,.5);
-    }
-    .fab:hover{background:rgba(0,0,0,.45)}
-    .fab .dot{
-      width:8px;height:8px;border-radius:999px;background:rgba(99,102,241,.9);
-      box-shadow:0 0 0 4px rgba(99,102,241,.25);
-    }
-
-    /* ✅ Drawer รายการไฟล์ (ซ่อนไว้ เปิดด้วย hamburger) */
-    .drawer-backdrop{
-      position:fixed; inset:0;
-      background:rgba(0,0,0,.55);
-      z-index:60;
-      display:none;
-    }
-    .drawer-backdrop.open{ display:block; }
-
-    .drawer{
-      position:fixed;
-      top:0; left:0;
-      height:100vh;
-      width:min(420px, 92vw);
-      z-index:70;
-      transform: translateX(-100%);
-      transition: transform .18s ease;
-      display:grid;
-      grid-template-rows:auto auto 1fr;
-    }
-    .drawer.open{ transform: translateX(0); }
-
-    .drawer-head{
-      padding:14px;
-      border-bottom:1px solid var(--border);
-      display:flex;align-items:center;justify-content:space-between;gap:10px;
-    }
-    .drawer-head strong{font-size:14px}
-    .xbtn{
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.04);
-      color:var(--text);
-      border-radius:12px;
-      padding:8px 10px;
-      cursor:pointer;
-    }
-    .xbtn:hover{background:rgba(255,255,255,.07)}
-    .drawer-search{padding:14px;border-bottom:1px solid var(--border)}
-    .drawer-search input{
-      width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--border);
-      background:rgba(0,0,0,.18);color:var(--text);outline:none;
-    }
-    .drawer-meta{padding:0 14px 12px;color:var(--muted);font-size:12px}
-    .tag{display:inline-block;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);padding:2px 8px;border-radius:999px}
-
-    .list{overflow:auto}
-    .item{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.06);display:grid;gap:6px;cursor:pointer}
-    .item:hover{background:rgba(255,255,255,.05)}
-    .item.active{background:rgba(99,102,241,.16)}
-    .name{font-weight:650;font-size:14px;display:flex;gap:8px;align-items:center}
-    .file{color:var(--muted);font-size:12px;display:flex;gap:10px;flex-wrap:wrap}
-
-    @media (max-width:700px){
-      .viewer{ height: calc(100vh - 140px); }
-      .fab{ left:14px; bottom:14px; }
+    /* ✅ Mobile: sidebar แปลงเป็น drawer */
+    @media (max-width:900px){
+      .grid{grid-template-columns: 1fr;}
+      .side{
+        position:fixed; left:0; top:0;
+        height:100vh; width:min(420px, 92vw);
+        z-index:70;
+        transform: translateX(-100%);
+        transition: transform .18s ease;
+      }
+      .side.open{ transform: translateX(0); }
+      .backdrop{
+        position:fixed; inset:0; background:rgba(0,0,0,.55);
+        z-index:60; display:none;
+      }
+      .backdrop.open{display:block;}
+      .mobileFab{
+        position:fixed; left:16px; bottom:16px; z-index:80;
+        border:1px solid var(--border);
+        background:rgba(0,0,0,.35);
+        color:var(--text);
+        border-radius:999px;
+        padding:12px 14px;
+        cursor:pointer;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        box-shadow: 0 16px 50px rgba(0,0,0,.5);
+      }
+      .mobileFab:hover{background:rgba(0,0,0,.45)}
+      .grid.collapsed{grid-template-columns:1fr;} /* ไม่ใช้ collapsed บน mobile */
     }
   </style>
 </head>
@@ -175,7 +188,7 @@
     <header>
       <div>
         <h1>ผลงาน / Reports</h1>
-        <p class="sub">กดปุ่มเมนู (☰) เพื่อเลือกไฟล์ • PDF จะเต็มจอมากที่สุด</p>
+        <p class="sub">Sidebar ซ้าย “หด/ขยาย” ได้ เพื่อเพิ่มพื้นที่อ่าน PDF</p>
       </div>
       <div class="actions">
         <a class="pill" href="README.md" target="_blank" rel="noopener noreferrer">📄 README</a>
@@ -183,51 +196,51 @@
       </div>
     </header>
 
-    <!-- ✅ PDF Viewer เต็มกว้าง -->
-    <section class="card viewer">
-      <div class="viewer-head">
-        <div class="viewer-title">
-          <strong id="vName">เลือกไฟล์จากเมนู</strong><br/>
-          <span id="vSub">ระบบจะพรีวิว PDF ที่นี่</span>
+    <div class="grid card" id="grid">
+      <!-- Sidebar -->
+      <aside class="side" id="side">
+        <div class="side-head">
+          <strong>รายการไฟล์</strong>
+          <button class="toggle" id="toggleSide" type="button" title="ย่อ/ขยาย">
+            <span id="toggleIcon">⟨⟩</span>
+            <span class="toggleText">ย่อ</span>
+          </button>
         </div>
-      </div>
 
-      <div id="viewerBody">
-        <div class="hint">
-          - กดปุ่มเมนู (☰) มุมซ้ายล่างเพื่อเปิดรายการไฟล์<br/>
-          - ไฟล์ต้องอยู่ใน repo เดียวกับ <code>index.html</code> และสะกดชื่อให้ตรง
+        <div class="side-search">
+          <input id="q" type="search" placeholder="ค้นหา เช่น caat, krungsri..." />
+          <div class="side-meta" style="margin-top:10px">
+            <span class="tag" id="count">0 files</span>
+          </div>
         </div>
-      </div>
-    </section>
+
+        <div class="list" id="list"></div>
+      </aside>
+
+      <!-- Viewer -->
+      <section class="viewer">
+        <div class="viewer-head">
+          <div class="viewer-title">
+            <strong id="vName">เลือกไฟล์ทางซ้าย</strong><br/>
+            <span id="vSub">ระบบจะพรีวิว PDF ที่นี่</span>
+          </div>
+        </div>
+
+        <div id="viewerBody">
+          <div class="hint">
+            - กดปุ่ม “ย่อ” ที่ sidebar เพื่อขยายพื้นที่ PDF<br/>
+            - ไฟล์ต้องอยู่ใน repo เดียวกับ <code>index.html</code> และสะกดชื่อให้ตรง
+          </div>
+        </div>
+      </section>
+    </div>
 
     <footer>© • Hosted on GitHub Pages</footer>
   </div>
 
-  <!-- ✅ Hamburger button -->
-  <button class="fab" id="fabMenu" type="button" aria-label="Open reports menu">
-    <span class="dot" aria-hidden="true"></span>
-    <span>Reports</span>
-    <span aria-hidden="true">☰</span>
-  </button>
-
-  <!-- ✅ Drawer -->
-  <div class="drawer-backdrop" id="drawerBackdrop"></div>
-
-  <aside class="card drawer" id="drawer" aria-label="Reports drawer">
-    <div class="drawer-head">
-      <strong>เลือกไฟล์ PDF</strong>
-      <button class="xbtn" id="closeDrawer" type="button">✕</button>
-    </div>
-
-    <div class="drawer-search">
-      <input id="q" type="search" placeholder="ค้นหาชื่อไฟล์ เช่น caat, krungsri, supalai..." />
-      <div class="drawer-meta" style="margin-top:10px">
-        <span class="tag" id="count">0 files</span>
-      </div>
-    </div>
-
-    <div class="list" id="list"></div>
-  </aside>
+  <!-- Mobile drawer helpers -->
+  <div class="backdrop" id="backdrop"></div>
+  <button class="mobileFab" id="mobileFab" type="button" style="display:none;">☰ Reports</button>
 
   <script>
     // กันคลิกขวา (ระดับหน้าเว็บ)
@@ -247,7 +260,8 @@
       if (e.key === "F12") e.preventDefault();
       if (ctrl && e.shiftKey && ["i","j","c"].includes(key)) e.preventDefault();
 
-      if (e.key === "Escape") closeDrawer();
+      // ESC ปิด sidebar ใน mobile
+      if (e.key === "Escape") closeMobileSide();
     });
 
     const files = [
@@ -257,10 +271,10 @@
       { file: "supalai-report-mar-2025.pdf",   label: "Supalai Monthly Report (Mar 2025)" },
     ];
 
-    const drawer = document.getElementById("drawer");
-    const backdrop = document.getElementById("drawerBackdrop");
-    const fab = document.getElementById("fabMenu");
-    const closeBtn = document.getElementById("closeDrawer");
+    const grid = document.getElementById("grid");
+    const side = document.getElementById("side");
+    const toggleBtn = document.getElementById("toggleSide");
+    const toggleIcon = document.getElementById("toggleIcon");
 
     const elList = document.getElementById("list");
     const elQ = document.getElementById("q");
@@ -270,25 +284,14 @@
     const vSub = document.getElementById("vSub");
     const viewerBody = document.getElementById("viewerBody");
 
+    const backdrop = document.getElementById("backdrop");
+    const mobileFab = document.getElementById("mobileFab");
+
     function esc(s){
       return String(s).replace(/[&<>"']/g, m => ({
         "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
       })[m]);
     }
-
-    function openDrawer(){
-      drawer.classList.add("open");
-      backdrop.classList.add("open");
-      setTimeout(() => elQ.focus(), 0);
-    }
-    function closeDrawer(){
-      drawer.classList.remove("open");
-      backdrop.classList.remove("open");
-    }
-
-    fab.addEventListener("click", openDrawer);
-    closeBtn.addEventListener("click", closeDrawer);
-    backdrop.addEventListener("click", closeDrawer);
 
     function highlightActive(file){
       document.querySelectorAll(".item").forEach(it=>{
@@ -305,7 +308,11 @@
       const src = "./" + file + "#view=FitH&toolbar=0&navpanes=0&scrollbar=0";
       viewerBody.innerHTML = `<iframe src="${encodeURI(src)}" title="${esc(label || file)}"></iframe>`;
 
-      closeDrawer();
+      // เลือกแล้ว: ถ้า desktop ให้หด sidebar อัตโนมัติ
+      if (!isMobile()) collapseSidebar(true);
+
+      // ถ้า mobile ให้ปิด drawer
+      closeMobileSide();
     }
 
     function render(){
@@ -330,11 +337,32 @@
         elList.appendChild(div);
       });
 
-      // เปิดอันแรกเป็นค่าเริ่มต้น
       if (filtered.length && !document.querySelector(".item.active")) {
         openFile(filtered[0].file, filtered[0].label);
       }
     }
+
+    function isMobile(){
+      return window.matchMedia("(max-width: 900px)").matches;
+    }
+
+    function collapseSidebar(collapsed){
+      if (collapsed) grid.classList.add("collapsed");
+      else grid.classList.remove("collapsed");
+
+      // update button label
+      if (grid.classList.contains("collapsed")){
+        toggleIcon.textContent = "☰";
+        toggleBtn.querySelector(".toggleText").textContent = "ขยาย";
+      } else {
+        toggleIcon.textContent = "⟨⟩";
+        toggleBtn.querySelector(".toggleText").textContent = "ย่อ";
+      }
+    }
+
+    toggleBtn.addEventListener("click", () => {
+      collapseSidebar(!grid.classList.contains("collapsed"));
+    });
 
     elQ.addEventListener("input", render);
 
@@ -344,6 +372,34 @@
       catch { prompt("คัดลอกลิงก์ด้วยตัวเอง:", location.href); }
     });
 
+    // Mobile drawer controls
+    function openMobileSide(){
+      side.classList.add("open");
+      backdrop.classList.add("open");
+      setTimeout(() => elQ.focus(), 0);
+    }
+    function closeMobileSide(){
+      side.classList.remove("open");
+      backdrop.classList.remove("open");
+    }
+    backdrop.addEventListener("click", closeMobileSide);
+    mobileFab.addEventListener("click", openMobileSide);
+
+    // Show mobile fab only on mobile
+    function syncMobileUI(){
+      if (isMobile()){
+        mobileFab.style.display = "";
+      } else {
+        mobileFab.style.display = "none";
+        closeMobileSide();
+      }
+    }
+    window.addEventListener("resize", syncMobileUI);
+
+    // init
+    syncMobileUI();
+    // เริ่มต้นให้ sidebar หด เพื่อให้ PDF กว้างสุด
+    collapseSidebar(true);
     render();
   </script>
 </body>
