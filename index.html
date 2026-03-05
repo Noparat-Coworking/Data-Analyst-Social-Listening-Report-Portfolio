@@ -38,7 +38,7 @@
       user-select:text !important;
     }
 
-    .wrap{max-width:1400px;margin:0 auto;padding:22px 16px 24px}
+    .wrap{max-width:1500px;margin:0 auto;padding:18px 14px 20px}
     header{
       display:flex;gap:12px;flex-wrap:wrap;
       align-items:flex-end;justify-content:space-between;
@@ -54,16 +54,6 @@
     }
     .pill:hover{background:rgba(255,255,255,.07)}
 
-    /* Layout */
-    .layout{
-      position:relative;
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:12px;
-      align-items:stretch;
-      min-height: calc(100vh - 120px);
-    }
-
     .card{
       background:var(--card);
       border:1px solid var(--border);
@@ -72,11 +62,12 @@
       overflow:hidden;
     }
 
-    /* Viewer (full width) */
+    /* ✅ Viewer เต็มกว้าง */
     .viewer{
       display:grid;
       grid-template-rows:auto 1fr;
-      min-height: calc(100vh - 140px);
+      height: calc(100vh - 120px);
+      min-height: 520px;
     }
     .viewer-head{
       padding:12px 14px;
@@ -85,14 +76,20 @@
     }
     .viewer-title strong{font-size:14px}
     .viewer-title span{font-size:12px;color:var(--muted)}
-    iframe{width:100%;height:100%;border:0;background:rgba(0,0,0,.22)}
+    iframe{
+      width:100%;
+      height:100%;
+      border:0;
+      background:rgba(0,0,0,.22);
+    }
     .hint{padding:16px;color:var(--muted);font-size:13px;line-height:1.6}
     code{background:rgba(255,255,255,.08);padding:2px 6px;border-radius:8px;border:1px solid rgba(255,255,255,.12)}
+    footer{margin-top:10px;text-align:center;color:rgba(255,255,255,.55);font-size:12px}
 
-    /* Floating hamburger */
+    /* ✅ ปุ่ม hamburger ลอย */
     .fab{
       position:fixed;
-      right:18px;
+      left:18px;
       bottom:18px;
       z-index:50;
       display:inline-flex;
@@ -114,26 +111,27 @@
       box-shadow:0 0 0 4px rgba(99,102,241,.25);
     }
 
-    /* Drawer */
+    /* ✅ Drawer รายการไฟล์ (ซ่อนไว้ เปิดด้วย hamburger) */
     .drawer-backdrop{
       position:fixed; inset:0;
       background:rgba(0,0,0,.55);
       z-index:60;
       display:none;
     }
+    .drawer-backdrop.open{ display:block; }
+
     .drawer{
       position:fixed;
-      top:0; right:0;
+      top:0; left:0;
       height:100vh;
       width:min(420px, 92vw);
       z-index:70;
-      transform: translateX(100%);
+      transform: translateX(-100%);
       transition: transform .18s ease;
       display:grid;
       grid-template-rows:auto auto 1fr;
     }
     .drawer.open{ transform: translateX(0); }
-    .drawer-backdrop.open{ display:block; }
 
     .drawer-head{
       padding:14px;
@@ -165,7 +163,10 @@
     .name{font-weight:650;font-size:14px;display:flex;gap:8px;align-items:center}
     .file{color:var(--muted);font-size:12px;display:flex;gap:10px;flex-wrap:wrap}
 
-    footer{margin-top:12px;text-align:center;color:rgba(255,255,255,.55);font-size:12px}
+    @media (max-width:700px){
+      .viewer{ height: calc(100vh - 140px); }
+      .fab{ left:14px; bottom:14px; }
+    }
   </style>
 </head>
 
@@ -174,7 +175,7 @@
     <header>
       <div>
         <h1>ผลงาน / Reports</h1>
-        <p class="sub">กดปุ่มเมนูด้านขวาล่างเพื่อเลือกไฟล์ • หน้าพรีวิว PDF จะเต็มจอมากขึ้น</p>
+        <p class="sub">กดปุ่มเมนู (☰) เพื่อเลือกไฟล์ • PDF จะเต็มจอมากที่สุด</p>
       </div>
       <div class="actions">
         <a class="pill" href="README.md" target="_blank" rel="noopener noreferrer">📄 README</a>
@@ -182,37 +183,34 @@
       </div>
     </header>
 
-    <div class="layout">
-      <!-- Viewer (Full Width) -->
-      <section class="card viewer">
-        <div class="viewer-head">
-          <div class="viewer-title">
-            <strong id="vName">เลือกไฟล์จากเมนู</strong><br/>
-            <span id="vSub">ระบบจะพรีวิว PDF ที่นี่</span>
-          </div>
+    <!-- ✅ PDF Viewer เต็มกว้าง -->
+    <section class="card viewer">
+      <div class="viewer-head">
+        <div class="viewer-title">
+          <strong id="vName">เลือกไฟล์จากเมนู</strong><br/>
+          <span id="vSub">ระบบจะพรีวิว PDF ที่นี่</span>
         </div>
+      </div>
 
-        <div id="viewerBody">
-          <div class="hint">
-            - กดปุ่มเมนูด้านขวาล่างเพื่อเปิดรายการไฟล์<br/>
-            - ไฟล์ต้องอยู่ใน repo เดียวกับ <code>index.html</code> และสะกดชื่อให้ตรง<br/>
-            - หมายเหตุ: หน้าเว็บพยายามลดการคัดลอก แต่ไฟล์ PDF ยังเป็นสาธารณะบน GitHub Pages
-          </div>
+      <div id="viewerBody">
+        <div class="hint">
+          - กดปุ่มเมนู (☰) มุมซ้ายล่างเพื่อเปิดรายการไฟล์<br/>
+          - ไฟล์ต้องอยู่ใน repo เดียวกับ <code>index.html</code> และสะกดชื่อให้ตรง
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
 
     <footer>© • Hosted on GitHub Pages</footer>
   </div>
 
-  <!-- Floating hamburger -->
+  <!-- ✅ Hamburger button -->
   <button class="fab" id="fabMenu" type="button" aria-label="Open reports menu">
     <span class="dot" aria-hidden="true"></span>
     <span>Reports</span>
     <span aria-hidden="true">☰</span>
   </button>
 
-  <!-- Drawer -->
+  <!-- ✅ Drawer -->
   <div class="drawer-backdrop" id="drawerBackdrop"></div>
 
   <aside class="card drawer" id="drawer" aria-label="Reports drawer">
@@ -249,7 +247,6 @@
       if (e.key === "F12") e.preventDefault();
       if (ctrl && e.shiftKey && ["i","j","c"].includes(key)) e.preventDefault();
 
-      // ESC ปิด drawer
       if (e.key === "Escape") closeDrawer();
     });
 
@@ -282,10 +279,8 @@
     function openDrawer(){
       drawer.classList.add("open");
       backdrop.classList.add("open");
-      // focus search
       setTimeout(() => elQ.focus(), 0);
     }
-
     function closeDrawer(){
       drawer.classList.remove("open");
       backdrop.classList.remove("open");
@@ -308,10 +303,8 @@
 
       // พยายามซ่อน toolbar ของ PDF viewer (แล้วแต่ browser)
       const src = "./" + file + "#view=FitH&toolbar=0&navpanes=0&scrollbar=0";
-
       viewerBody.innerHTML = `<iframe src="${encodeURI(src)}" title="${esc(label || file)}"></iframe>`;
 
-      // เลือกแล้วปิดเมนูให้ดูเต็มจอทันที
       closeDrawer();
     }
 
