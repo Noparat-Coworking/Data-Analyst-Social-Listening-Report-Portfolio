@@ -13,7 +13,7 @@
     }
     *{box-sizing:border-box}
 
-    /* ✅ กัน copy ระดับหน้าเว็บ (กันคนทั่วไป) */
+    /* กัน copy ระดับหน้าเว็บ */
     body{
       margin:0;
       font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
@@ -38,9 +38,13 @@
       user-select:text !important;
     }
 
-    .wrap{max-width:1200px;margin:0 auto;padding:28px 18px 40px}
-    header{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;margin-bottom:14px}
-    h1{margin:0;font-size:26px}
+    .wrap{max-width:1400px;margin:0 auto;padding:22px 16px 24px}
+    header{
+      display:flex;gap:12px;flex-wrap:wrap;
+      align-items:flex-end;justify-content:space-between;
+      margin-bottom:12px
+    }
+    h1{margin:0;font-size:24px}
     .sub{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.5}
     .actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
     .pill{
@@ -49,42 +53,119 @@
       background:rgba(255,255,255,.04);color:var(--text);text-decoration:none;font-size:13px;
     }
     .pill:hover{background:rgba(255,255,255,.07)}
-    .grid{display:grid;grid-template-columns:380px 1fr;gap:14px}
-    @media (max-width:980px){.grid{grid-template-columns:1fr}}
-    .card{
-      background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
-      box-shadow:var(--shadow);overflow:hidden;
+
+    /* Layout */
+    .layout{
+      position:relative;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+      align-items:stretch;
+      min-height: calc(100vh - 120px);
     }
-    .card-head{padding:14px;border-bottom:1px solid var(--border);display:grid;gap:10px}
-    .search input{
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    /* Viewer (full width) */
+    .viewer{
+      display:grid;
+      grid-template-rows:auto 1fr;
+      min-height: calc(100vh - 140px);
+    }
+    .viewer-head{
+      padding:12px 14px;
+      border-bottom:1px solid var(--border);
+      display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+    }
+    .viewer-title strong{font-size:14px}
+    .viewer-title span{font-size:12px;color:var(--muted)}
+    iframe{width:100%;height:100%;border:0;background:rgba(0,0,0,.22)}
+    .hint{padding:16px;color:var(--muted);font-size:13px;line-height:1.6}
+    code{background:rgba(255,255,255,.08);padding:2px 6px;border-radius:8px;border:1px solid rgba(255,255,255,.12)}
+
+    /* Floating hamburger */
+    .fab{
+      position:fixed;
+      right:18px;
+      bottom:18px;
+      z-index:50;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:12px 14px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(0,0,0,.35);
+      color:var(--text);
+      cursor:pointer;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 16px 50px rgba(0,0,0,.5);
+    }
+    .fab:hover{background:rgba(0,0,0,.45)}
+    .fab .dot{
+      width:8px;height:8px;border-radius:999px;background:rgba(99,102,241,.9);
+      box-shadow:0 0 0 4px rgba(99,102,241,.25);
+    }
+
+    /* Drawer */
+    .drawer-backdrop{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,.55);
+      z-index:60;
+      display:none;
+    }
+    .drawer{
+      position:fixed;
+      top:0; right:0;
+      height:100vh;
+      width:min(420px, 92vw);
+      z-index:70;
+      transform: translateX(100%);
+      transition: transform .18s ease;
+      display:grid;
+      grid-template-rows:auto auto 1fr;
+    }
+    .drawer.open{ transform: translateX(0); }
+    .drawer-backdrop.open{ display:block; }
+
+    .drawer-head{
+      padding:14px;
+      border-bottom:1px solid var(--border);
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+    }
+    .drawer-head strong{font-size:14px}
+    .xbtn{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      border-radius:12px;
+      padding:8px 10px;
+      cursor:pointer;
+    }
+    .xbtn:hover{background:rgba(255,255,255,.07)}
+    .drawer-search{padding:14px;border-bottom:1px solid var(--border)}
+    .drawer-search input{
       width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--border);
       background:rgba(0,0,0,.18);color:var(--text);outline:none;
     }
-    .meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:12px}
-    .tag{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);padding:2px 8px;border-radius:999px}
-    .list{max-height:70vh;overflow:auto}
+    .drawer-meta{padding:0 14px 12px;color:var(--muted);font-size:12px}
+    .tag{display:inline-block;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);padding:2px 8px;border-radius:999px}
+
+    .list{overflow:auto}
     .item{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.06);display:grid;gap:6px;cursor:pointer}
     .item:hover{background:rgba(255,255,255,.05)}
     .item.active{background:rgba(99,102,241,.16)}
     .name{font-weight:650;font-size:14px;display:flex;gap:8px;align-items:center}
     .file{color:var(--muted);font-size:12px;display:flex;gap:10px;flex-wrap:wrap}
-    .viewer{display:grid;grid-template-rows:auto 1fr;min-height:70vh}
-    .viewer-head{padding:14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
-    .viewer-title strong{font-size:14px}
-    .viewer-title span{font-size:12px;color:var(--muted)}
-    .btn{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:9px 12px;border-radius:12px;border:1px solid var(--border);
-      background:rgba(255,255,255,.04);color:var(--text);text-decoration:none;font-size:13px;
-    }
-    .btn:hover{background:rgba(255,255,255,.07)}
 
-    /* NOTE: iframe เป็น PDF viewer ของ browser — กัน copy ใน PDF จริง ๆ ไม่ได้ */
-    iframe{width:100%;height:100%;border:0;background:rgba(0,0,0,.22)}
-
-    .hint{padding:16px;color:var(--muted);font-size:13px;line-height:1.6}
-    footer{margin-top:14px;text-align:center;color:rgba(255,255,255,.55);font-size:12px}
-    code{background:rgba(255,255,255,.08);padding:2px 6px;border-radius:8px;border:1px solid rgba(255,255,255,.12)}
+    footer{margin-top:12px;text-align:center;color:rgba(255,255,255,.55);font-size:12px}
   </style>
 </head>
 
@@ -93,7 +174,7 @@
     <header>
       <div>
         <h1>ผลงาน / Reports</h1>
-        <p class="sub">คลิกที่รายการด้านซ้ายเพื่อพรีวิวไฟล์ PDF</p>
+        <p class="sub">กดปุ่มเมนูด้านขวาล่างเพื่อเลือกไฟล์ • หน้าพรีวิว PDF จะเต็มจอมากขึ้น</p>
       </div>
       <div class="actions">
         <a class="pill" href="README.md" target="_blank" rel="noopener noreferrer">📄 README</a>
@@ -101,36 +182,20 @@
       </div>
     </header>
 
-    <div class="grid">
-      <section class="card">
-        <div class="card-head">
-          <div class="search">
-            <input id="q" type="search" placeholder="ค้นหาชื่อไฟล์ เช่น caat, krungsri, supalai..." />
-          </div>
-          <div class="meta">
-            <span class="tag" id="count">0 files</span>
-            <span class="tag">คลิกเพื่อพรีวิว</span>
-          </div>
-        </div>
-        <div class="list" id="list"></div>
-      </section>
-
+    <div class="layout">
+      <!-- Viewer (Full Width) -->
       <section class="card viewer">
         <div class="viewer-head">
           <div class="viewer-title">
-            <strong id="vName">เลือกไฟล์ทางซ้าย</strong><br/>
+            <strong id="vName">เลือกไฟล์จากเมนู</strong><br/>
             <span id="vSub">ระบบจะพรีวิว PDF ที่นี่</span>
-          </div>
-
-          <!-- ✅ เหลือแค่ปุ่มเปิดแท็บใหม่ (ไม่มีดาวน์โหลด) -->
-          <div style="display:flex;gap:10px;flex-wrap:wrap">
-            <a class="btn" id="openBtn" href="#" target="_blank" rel="noopener noreferrer" style="display:none;">🧾 เปิดแท็บใหม่</a>
           </div>
         </div>
 
         <div id="viewerBody">
           <div class="hint">
-            - หากต้องการดูเต็มหน้าจอ ให้กด “เปิดแท็บใหม่”<br/>
+            - กดปุ่มเมนูด้านขวาล่างเพื่อเปิดรายการไฟล์<br/>
+            - ไฟล์ต้องอยู่ใน repo เดียวกับ <code>index.html</code> และสะกดชื่อให้ตรง<br/>
             - หมายเหตุ: หน้าเว็บพยายามลดการคัดลอก แต่ไฟล์ PDF ยังเป็นสาธารณะบน GitHub Pages
           </div>
         </div>
@@ -140,13 +205,37 @@
     <footer>© • Hosted on GitHub Pages</footer>
   </div>
 
-  <script>
-    console.log("Portfolio JS loaded ✅");
+  <!-- Floating hamburger -->
+  <button class="fab" id="fabMenu" type="button" aria-label="Open reports menu">
+    <span class="dot" aria-hidden="true"></span>
+    <span>Reports</span>
+    <span aria-hidden="true">☰</span>
+  </button>
 
-    // ✅ กันคลิกขวา (ระดับหน้าเว็บ)
+  <!-- Drawer -->
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+
+  <aside class="card drawer" id="drawer" aria-label="Reports drawer">
+    <div class="drawer-head">
+      <strong>เลือกไฟล์ PDF</strong>
+      <button class="xbtn" id="closeDrawer" type="button">✕</button>
+    </div>
+
+    <div class="drawer-search">
+      <input id="q" type="search" placeholder="ค้นหาชื่อไฟล์ เช่น caat, krungsri, supalai..." />
+      <div class="drawer-meta" style="margin-top:10px">
+        <span class="tag" id="count">0 files</span>
+      </div>
+    </div>
+
+    <div class="list" id="list"></div>
+  </aside>
+
+  <script>
+    // กันคลิกขวา (ระดับหน้าเว็บ)
     document.addEventListener("contextmenu", (e) => e.preventDefault());
 
-    // ✅ กันคีย์ลัดที่มักใช้ copy/save/print/view-source
+    // กันคีย์ลัดหลัก ๆ (ระดับหน้าเว็บ)
     document.addEventListener("keydown", (e) => {
       const key = (e.key || "").toLowerCase();
       const ctrl = e.ctrlKey || e.metaKey;
@@ -154,16 +243,14 @@
       // allow in input/search
       const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : "";
       const typing = tag === "input" || tag === "textarea";
-
       if (typing) return;
 
-      if (ctrl && ["c","x","s","p","u","a"].includes(key)) {
-        e.preventDefault();
-      }
-
-      // F12 / DevTools shortcuts (กันได้ไม่หมด แต่ลดได้)
+      if (ctrl && ["c","x","s","p","u","a"].includes(key)) e.preventDefault();
       if (e.key === "F12") e.preventDefault();
       if (ctrl && e.shiftKey && ["i","j","c"].includes(key)) e.preventDefault();
+
+      // ESC ปิด drawer
+      if (e.key === "Escape") closeDrawer();
     });
 
     const files = [
@@ -173,6 +260,11 @@
       { file: "supalai-report-mar-2025.pdf",   label: "Supalai Monthly Report (Mar 2025)" },
     ];
 
+    const drawer = document.getElementById("drawer");
+    const backdrop = document.getElementById("drawerBackdrop");
+    const fab = document.getElementById("fabMenu");
+    const closeBtn = document.getElementById("closeDrawer");
+
     const elList = document.getElementById("list");
     const elQ = document.getElementById("q");
     const elCount = document.getElementById("count");
@@ -180,9 +272,28 @@
     const vName = document.getElementById("vName");
     const vSub = document.getElementById("vSub");
     const viewerBody = document.getElementById("viewerBody");
-    const openBtn = document.getElementById("openBtn");
 
-    function esc(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+    function esc(s){
+      return String(s).replace(/[&<>"']/g, m => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+      })[m]);
+    }
+
+    function openDrawer(){
+      drawer.classList.add("open");
+      backdrop.classList.add("open");
+      // focus search
+      setTimeout(() => elQ.focus(), 0);
+    }
+
+    function closeDrawer(){
+      drawer.classList.remove("open");
+      backdrop.classList.remove("open");
+    }
+
+    fab.addEventListener("click", openDrawer);
+    closeBtn.addEventListener("click", closeDrawer);
+    backdrop.addEventListener("click", closeDrawer);
 
     function highlightActive(file){
       document.querySelectorAll(".item").forEach(it=>{
@@ -195,13 +306,13 @@
       vName.textContent = label || file;
       vSub.textContent = file;
 
-      // ✅ พยายามซ่อน toolbar ของ PDF viewer (ขึ้นกับ browser)
+      // พยายามซ่อน toolbar ของ PDF viewer (แล้วแต่ browser)
       const src = "./" + file + "#view=FitH&toolbar=0&navpanes=0&scrollbar=0";
 
       viewerBody.innerHTML = `<iframe src="${encodeURI(src)}" title="${esc(label || file)}"></iframe>`;
 
-      openBtn.style.display = "";
-      openBtn.href = "./" + file;
+      // เลือกแล้วปิดเมนูให้ดูเต็มจอทันที
+      closeDrawer();
     }
 
     function render(){
@@ -226,7 +337,10 @@
         elList.appendChild(div);
       });
 
-      if (filtered.length) openFile(filtered[0].file, filtered[0].label);
+      // เปิดอันแรกเป็นค่าเริ่มต้น
+      if (filtered.length && !document.querySelector(".item.active")) {
+        openFile(filtered[0].file, filtered[0].label);
+      }
     }
 
     elQ.addEventListener("input", render);
