@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ผลงาน / Reports Noparat Asampinsap</title>
+
   <style>
     :root{
       --bg:#0b1020; --card:rgba(255,255,255,.06); --text:rgba(255,255,255,.92);
@@ -11,6 +12,8 @@
       --shadow:0 18px 60px rgba(0,0,0,.45); --radius:16px;
     }
     *{box-sizing:border-box}
+
+    /* ✅ กัน copy ระดับหน้าเว็บ (กันคนทั่วไป) */
     body{
       margin:0;
       font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
@@ -20,7 +23,21 @@
         radial-gradient(900px 650px at 85% 18%, rgba(34,197,94,.18), transparent 55%),
         var(--bg);
       min-height:100vh;
+
+      -webkit-user-select:none;
+      -moz-user-select:none;
+      -ms-user-select:none;
+      user-select:none;
     }
+
+    /* อนุญาตให้ select ในช่องค้นหา */
+    input, textarea{
+      -webkit-user-select:text !important;
+      -moz-user-select:text !important;
+      -ms-user-select:text !important;
+      user-select:text !important;
+    }
+
     .wrap{max-width:1200px;margin:0 auto;padding:28px 18px 40px}
     header{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;margin-bottom:14px}
     h1{margin:0;font-size:26px}
@@ -61,7 +78,10 @@
       background:rgba(255,255,255,.04);color:var(--text);text-decoration:none;font-size:13px;
     }
     .btn:hover{background:rgba(255,255,255,.07)}
+
+    /* NOTE: iframe เป็น PDF viewer ของ browser — กัน copy ใน PDF จริง ๆ ไม่ได้ */
     iframe{width:100%;height:100%;border:0;background:rgba(0,0,0,.22)}
+
     .hint{padding:16px;color:var(--muted);font-size:13px;line-height:1.6}
     footer{margin-top:14px;text-align:center;color:rgba(255,255,255,.55);font-size:12px}
     code{background:rgba(255,255,255,.08);padding:2px 6px;border-radius:8px;border:1px solid rgba(255,255,255,.12)}
@@ -73,7 +93,7 @@
     <header>
       <div>
         <h1>ผลงาน / Reports</h1>
-        <p class="sub">คลิกที่รายการด้านซ้ายเพื่อพรีวิวไฟล์ PDF </p>
+        <p class="sub">คลิกที่รายการด้านซ้ายเพื่อพรีวิวไฟล์ PDF</p>
       </div>
       <div class="actions">
         <a class="pill" href="README.md" target="_blank" rel="noopener noreferrer">📄 README</a>
@@ -101,15 +121,17 @@
             <strong id="vName">เลือกไฟล์ทางซ้าย</strong><br/>
             <span id="vSub">ระบบจะพรีวิว PDF ที่นี่</span>
           </div>
+
+          <!-- ✅ เหลือแค่ปุ่มเปิดแท็บใหม่ (ไม่มีดาวน์โหลด) -->
           <div style="display:flex;gap:10px;flex-wrap:wrap">
             <a class="btn" id="openBtn" href="#" target="_blank" rel="noopener noreferrer" style="display:none;">🧾 เปิดแท็บใหม่</a>
-            <a class="btn" id="dlBtn" href="#" download style="display:none;">⬇️ ดาวน์โหลด</a>
           </div>
         </div>
+
         <div id="viewerBody">
           <div class="hint">
-            - ถ้าเบราว์เซอร์ไม่รองรับการฝัง PDF ให้กด “เปิดแท็บใหม่”<br/>
-            - ไฟล์ต้องอยู่ใน repo เดียวกับ <code>index.html</code> และสะกดชื่อให้ตรง
+            - หากต้องการดูเต็มหน้าจอ ให้กด “เปิดแท็บใหม่”<br/>
+            - หมายเหตุ: หน้าเว็บพยายามลดการคัดลอก แต่ไฟล์ PDF ยังเป็นสาธารณะบน GitHub Pages
           </div>
         </div>
       </section>
@@ -121,11 +143,34 @@
   <script>
     console.log("Portfolio JS loaded ✅");
 
+    // ✅ กันคลิกขวา (ระดับหน้าเว็บ)
+    document.addEventListener("contextmenu", (e) => e.preventDefault());
+
+    // ✅ กันคีย์ลัดที่มักใช้ copy/save/print/view-source
+    document.addEventListener("keydown", (e) => {
+      const key = (e.key || "").toLowerCase();
+      const ctrl = e.ctrlKey || e.metaKey;
+
+      // allow in input/search
+      const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : "";
+      const typing = tag === "input" || tag === "textarea";
+
+      if (typing) return;
+
+      if (ctrl && ["c","x","s","p","u","a"].includes(key)) {
+        e.preventDefault();
+      }
+
+      // F12 / DevTools shortcuts (กันได้ไม่หมด แต่ลดได้)
+      if (e.key === "F12") e.preventDefault();
+      if (ctrl && e.shiftKey && ["i","j","c"].includes(key)) e.preventDefault();
+    });
+
     const files = [
       { file: "ais-fibre-report-dec-2025.pdf", label: "AIS Fibre Monthly Report (Dec 2025)" },
       { file: "caat-report-2025.pdf",          label: "CAAT Report (2025)" },
-      { file: "krungsri-report.pdf",          label: "Krungsri Consumer Social Dashboard" },
-      { file: "supalai-report-mar-2025.pdf",  label: "Supalai Monthly Report (Mar 2025)" },
+      { file: "krungsri-report.pdf",           label: "Krungsri Consumer Social Dashboard" },
+      { file: "supalai-report-mar-2025.pdf",   label: "Supalai Monthly Report (Mar 2025)" },
     ];
 
     const elList = document.getElementById("list");
@@ -136,7 +181,6 @@
     const vSub = document.getElementById("vSub");
     const viewerBody = document.getElementById("viewerBody");
     const openBtn = document.getElementById("openBtn");
-    const dlBtn = document.getElementById("dlBtn");
 
     function esc(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
@@ -151,14 +195,13 @@
       vName.textContent = label || file;
       vSub.textContent = file;
 
-      const src = "./" + file + "#view=FitH";
+      // ✅ พยายามซ่อน toolbar ของ PDF viewer (ขึ้นกับ browser)
+      const src = "./" + file + "#view=FitH&toolbar=0&navpanes=0&scrollbar=0";
+
       viewerBody.innerHTML = `<iframe src="${encodeURI(src)}" title="${esc(label || file)}"></iframe>`;
 
       openBtn.style.display = "";
-      dlBtn.style.display = "";
       openBtn.href = "./" + file;
-      dlBtn.href = "./" + file;
-      dlBtn.setAttribute("download", file);
     }
 
     function render(){
